@@ -8,22 +8,32 @@ class Search {
     this.li3 = this.createElement("li", "drop-item");
     this.li4 = this.createElement("li", "drop-item");
     this.li5 = this.createElement("li", "drop-item");
+    this.backClose = this.createElement("div", "backclose");
+    this.bottomContainer = this.createElement("div", "bottomContainer");
     this.res;
     this.r;
 
     this.app.append(this.searchInput);
     this.app.append(this.drop);
     this.drop.append(this.li1);
+    this.li1.dataset.number = 0;
     this.drop.append(this.li2);
+    this.li2.dataset.number = 1;
     this.drop.append(this.li3);
+    this.li3.dataset.number = 2;
     this.drop.append(this.li4);
+    this.li4.dataset.number = 3;
     this.drop.append(this.li5);
+    this.li5.dataset.number = 4;
+    this.app.append(this.backClose);
+    this.app.append(this.bottomContainer);
 
-    // this.searchInput.addEventListener("click", this.open.bind(this));
     this.searchInput.addEventListener("keyup", this.searchDebounce.bind(this));
+
     this.drop.addEventListener("click", (e) => {
-      this.addBlock(this.res[0]);
-      console.log(e.target);
+      this.addBlock(this.res[e.target.dataset.number]);
+      this.searchInput.value = "";
+      this.close();
     });
   }
   open() {
@@ -36,16 +46,20 @@ class Search {
     this.drop.classList.remove("drop__open");
   }
   addBlock(data) {
-    console.log(data);
     this.block = this.createElement("div", "block");
     this.button = this.createElement("button", "button");
-    this.app.append(this.block);
-    this.block.append(this.button);
-    this.block.innerHTML = `
-      Name: ${data.name} 
-      Owner: ${data.owner.login} 
+    this.text = this.createElement("div", "block-text");
+    this.bottomContainer.append(this.block);
+    this.block.append(this.text);
+    this.text.innerHTML = `
+      Name: ${data.name} <br>
+      Owner: ${data.owner.login} <br>
       Stars: ${data.stargazers_count}
       `;
+    this.block.append(this.button);
+    this.button.addEventListener("click", (e) => {
+      e.target.parentElement.remove();
+    });
   }
 
   createElement(elementTag, elementClass) {
@@ -92,8 +106,7 @@ class Search {
 }
 
 new Search();
-//отлавливать клик/ дата?
-//очиска дропа при пустом поле
+
 //закрывать дроп
 //кнопка закрытия
 //макс блоков?
