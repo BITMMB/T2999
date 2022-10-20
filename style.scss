@@ -12,14 +12,12 @@ html {
 *:after {
   box-sizing: inherit;
 }
-#app {
+.container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 70px;
-  // padding-left: 77px;
   font-size: 20px;
-
   margin: 0 auto;
   background-color: #c4c4c4;
   min-height: 763px;
