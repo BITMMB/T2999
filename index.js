@@ -1,32 +1,20 @@
 let app = document.getElementById("container");
 let searchInput = document.getElementById("container-serchForm");
 let drop = document.getElementById("drop");
-let li1 = document.getElementById("drop-item0");
-let li2 = document.getElementById("drop-item1");
-let li3 = document.getElementById("drop-item2");
-let li4 = document.getElementById("drop-item3");
-let li5 = document.getElementById("drop-item4");
-let backClose = document.getElementById("backclose");
 let bottomContainer = document.getElementById("bottomContainer");
 let res;
+let liArr = Array.from(document.querySelectorAll("li"));
 let r;
+let open = false;
 
-searchInput.addEventListener("keyup", searchDebounce.bind(this));
+searchInput.addEventListener("keypress", searchDebounce.bind(this));
 
 drop.addEventListener("click", (e) => {
   addBlock(res[e.target.dataset.number]);
   searchInput.value = "";
-  close();
+  drop.classList.toggle("drop__open");
+  open = false;
 });
-
-function open() {
-  drop.classList.remove("drop");
-  drop.classList.add("drop__open");
-}
-function close() {
-  drop.classList.add("drop");
-  drop.classList.remove("drop__open");
-}
 
 function addBlock(data) {
   let block = document.createElement("div");
@@ -58,28 +46,26 @@ function searchDebounce() {
 }
 async function searchRep() {
   if (searchInput.value.length === 0) {
-    close();
+    drop.classList.toggle("drop__open");
+    open = false;
     return;
   }
-  return await fetch(
+  const result = await fetch(
     `https://api.github.com/search/repositories?q=${searchInput.value}`
-  ).then((result) => {
-    try {
-      if (result.ok) {
-        result.json().then((data) => {
-          open.bind(this)();
-          li1.innerHTML = `${data.items[0].name}`;
-          li2.innerHTML = `${data.items[1].name}`;
-          li3.innerHTML = `${data.items[2].name}`;
-          li4.innerHTML = `${data.items[3].name}`;
-          li5.innerHTML = `${data.items[4].name}`;
-          res = data.items;
+  );
+  const result2 = await result.json();
+  data = result2;
+  addResult(data);
+}
 
-          return res;
-        });
-      }
-    } catch {
-      throw new Error("Git Error");
-    }
-  });
+function addResult(data) {
+  if (open == false) {
+    drop.classList.toggle("drop__open");
+  }
+  for (let i = 0; i < 5; i++) {
+    liArr[i].innerHTML = `${data.items[i].name}`;
+  }
+  open = true;
+  res = data.items;
+  return res;
 }
