@@ -5,9 +5,16 @@ let bottomContainer = document.getElementById("bottomContainer");
 let res;
 let liArr = Array.from(document.querySelectorAll("li"));
 let r;
+let l = 0;
 let open = false;
 
-searchInput.addEventListener("keypress", searchDebounce.bind(this));
+searchInput.addEventListener("keypress", () => {
+  if (l == searchInput.value.length) {
+    return;
+  }
+  l = searchInput.value.length;
+  searchDebounce.bind(this)();
+});
 
 drop.addEventListener("click", (e) => {
   addBlock(res[e.target.dataset.number]);
